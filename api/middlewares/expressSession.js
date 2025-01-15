@@ -15,6 +15,7 @@ export const configureSession = (mongoClient, sessionSecret) =>
     cookie: {
       secure: true, // cookie only sent through https
       httpOnly: true, //access through hhtp(s) and not js
+      sameSite: 'lax',
       maxAge: 1000 * 60 * 60 * 24,
     },
   });
