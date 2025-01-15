@@ -1,12 +1,15 @@
+import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
 
-export const connectToDatabase = async (uri) => {
-  try {
-    const connection = await mongoose.connect(uri);
-    console.log('connected to mongoDB');
-    return connection;
-  } catch (err) {
-    console.error('Error connecting to mongoDB: ', err);
-    throw err;
-  }
+export const connectToMongoClient = async (uri) => {
+  const mongoClient = new MongoClient(uri);
+
+  await mongoClient.connect();
+  console.log('Connected to MongoDB');
+  return mongoClient;
+};
+
+export const connectToMongoose = async (uri) => {
+  await mongoose.connect(uri);
+  console.log('Mongoose connected to MongoDB');
 };

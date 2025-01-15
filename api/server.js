@@ -1,11 +1,9 @@
 import express from 'express';
-import session from 'express-session';
-import MongoStore from 'connect-mongo';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import cors from 'cors';
-import { connectToDatabase } from './utils/database.js';
-import { MongoClient } from 'mongodb';
+import { connectToMongoClient, connectToMongoose } from './utils/database.js';
+import { configureGlobalMiddleware } from './middlewares/global.js';
+import { configureSession } from './middlewares/expressSession.js';
+
 dotenv.config();
 
 const app = express();
@@ -13,40 +11,28 @@ const PORT = 4001;
 const sessionSecret = process.env.SESSION_SECRET;
 const mongoURI = process.env.MONGO_URI;
 
-app.use(cors());
-
-const mongoClient = new MongoClient(mongoURI);
-
 const startServer = async () => {
   try {
-    await mongoClient.connect();
-    console.log('Connected to MongoDB');
+    //connect to mongoDB with MongoClient is needed to interact with connect-mongo in express session
+    const mongoClient = await connectToMongoClient(mongoURI);
 
-    await mongoose.connect(mongoURI);
-    console.log('Mongoose connected to MongoDB');
+    // use mongoose for easy interaction with mongoDB
+    await connectToMongoose(mongoURI);
 
-    app.use(
-      session({
-        secret: sessionSecret,
-        resave: false,
-        saveUninitialized: false,
-        store: MongoStore.create({
-          client: mongoClient,
-          dbName: 'reflekt-cluster',
-        }),
-        cookie: {
-          secure: true,
-          httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24,
-        },
-      }),
-    );
+    //global middleware
+    configureGlobalMiddleware(app);
 
+    // express session configuration
+    app.use(configureSession(mongoClient, sessionSecret));
+
+    // start express server
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
   } catch (err) {
+    //handle errors during server or db initialization
     console.error('Failed to start server: ', err);
+    // terminate with an error code 1: error
     process.exit(1);
   }
 };
