@@ -1,6 +1,8 @@
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 //set up session managment with express
 export const configureSession = (mongoClient, sessionSecret) =>
   session({
@@ -13,9 +15,9 @@ export const configureSession = (mongoClient, sessionSecret) =>
       dbName: 'reflekt', // creates db if no db with that name is found
     }),
     cookie: {
-      secure: true, // cookie only sent through https
-      httpOnly: true, //access through hhtp(s) and not js
-      sameSite: 'lax',
+      secure: isProduction, // cookie only sent through https
+      httpOnly: true, //cookie cannot be accessed by js
+      sameSite: 'none', // needed for cross-origin requests
       maxAge: 1000 * 60 * 60 * 24,
     },
   });

@@ -8,13 +8,16 @@ const apiClient = axios.create({
 });
 
 export const loginUser = async (username, password) => {
+  console.log('login attempt: ', username, password);
   try {
     const response = await apiClient.post('/login', {
       username,
       password,
     });
+    console.log('login response: ', response.data);
     return response.data;
   } catch (err) {
+    console.log('error: ', err);
     if (err.response) {
       throw new Error(
         err.response.data.msg || 'An error occurred during login.',

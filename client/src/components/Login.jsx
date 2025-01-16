@@ -17,10 +17,18 @@ export const Login = () => {
 
   const handlesubmit = async (e) => {
     e.preventDefault();
+
+    const { username, password } = formData;
+
     try {
       const data = await loginUser(username, password);
       console.log(data);
       window.location.href = '/diary-entry';
+
+      setFormData({
+        username: '',
+        password: '',
+      });
     } catch (err) {
       console.error(err.message);
     }
