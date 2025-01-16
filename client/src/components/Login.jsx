@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import { loginUser } from '../utils/auth';
 
 export const Login = () => {
   const [formData, setFormData] = useState({
@@ -13,17 +13,23 @@ export const Login = () => {
       ...prevState,
       [name]: value,
     }));
-    console.log(e.target);
   };
 
-  // const handlesubmit = () => {
-  //   return;
-  // };
+  const handlesubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await loginUser(username, password);
+      console.log(data);
+      window.location.href = '/diary-entry';
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
 
   return (
     <div>
       <h1>Login</h1>
-      <form>
+      <form onSubmit={handlesubmit}>
         <div>
           <label htmlFor="username">Username</label>
           <input
@@ -45,6 +51,7 @@ export const Login = () => {
             onChange={handleChange}
           />
         </div>
+        <button type="submit">Log In</button>
       </form>
     </div>
   );
