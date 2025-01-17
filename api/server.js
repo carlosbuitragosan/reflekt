@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { connectToMongoClient, connectToMongoose } from './utils/database.js';
 import { configureGlobalMiddleware } from './middlewares/global.js';
 import { configureSession } from './middlewares/expressSession.js';
-import { MongoClient } from 'mongodb';
+import loginRoute from './routes/authRoutes.js';
 
 dotenv.config();
 
@@ -23,25 +23,18 @@ const startServer = async () => {
     // use mongoose for easy interaction with mongoDB
     await connectToMongoose(mongoURI);
 
+    //Attach mongoClient to req in middleware
+    app.use((req, res, next) => {
+      req.mongoClient = mongoClient;
+      next();
+    });
+
     // express session configuration
     app.use(configureSession(mongoClient, sessionSecret));
 
-    app.post('/login', async (req, res) => {
-      const { username, password } = req.body;
-      const db = mongoClient.db('reflekt');
-      const user = await db.collection('users').findOne({ username });
+    //Routes
+    app.use('/', loginRoute);
 
-      if (!user) {
-        return res.status(403).json({ msg: 'No user found.' });
-      }
-      if (user.password === password) {
-        req.session.authenticated = true;
-        req.session.user = { username, password };
-        console.log(req.session);
-        return res.status(200).json({ msg: 'Login successful.' });
-      }
-      return res.status(403).json({ msg: 'Bad credentials.' });
-    });
     // start express server
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
@@ -49,6 +42,7 @@ const startServer = async () => {
   } catch (err) {
     //handle errors during server or db initialization
     console.error('Failed to start server: ', err);
+
     // terminate with an error code 1: error
     process.exit(1);
   }
