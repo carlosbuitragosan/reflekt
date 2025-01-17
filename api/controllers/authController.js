@@ -10,12 +10,10 @@ export const loginUser = async (req, res) => {
     if (user.password === password) {
       req.session.authenticated = true;
       req.session.user = { username, password };
-      console.log('req session: ', req.session);
       return res.status(200).json({ msg: 'Login successful.' });
     }
     return res.status(403).json({ msg: 'Bad credentials.' });
   } catch (err) {
-    console.error('Error logging in user: ', err);
     return res.status(500).json({ msg: 'Internal server error.' });
   }
 };

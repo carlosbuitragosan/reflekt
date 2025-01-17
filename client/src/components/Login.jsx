@@ -17,12 +17,9 @@ export const Login = () => {
 
   const handlesubmit = async (e) => {
     e.preventDefault();
-
     const { username, password } = formData;
-
     try {
-      const data = await loginUser(username, password);
-      console.log(data);
+      await loginUser(username, password);
       window.location.href = '/diary-entry';
 
       setFormData({
