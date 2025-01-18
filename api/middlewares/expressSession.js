@@ -15,7 +15,7 @@ export const configureSession = (mongoClient, sessionSecret) =>
       dbName: 'reflekt', // creates db if no db with that name is found
     }),
     cookie: {
-      secure: isProduction, // cookie only sent through https if true
+      secure: false, // cookie only sent through https if true
       httpOnly: true, //cookie cannot be accessed by js
       sameSite: 'lax', // needed for cross-origin requests
       maxAge: 1000 * 60 * 60 * 24,

@@ -8,9 +8,19 @@ export const loginUser = async (req, res) => {
       return res.status(403).json({ msg: 'No user found.' });
     }
     if (user.password === password) {
+      console.log('session before authentication in loginUser: ', req.session);
+
+      //set session data
       req.session.authenticated = true;
-      req.session.user = { username, password };
-      return res.status(200).json({ msg: 'Login successful.' });
+      req.session.user = { username };
+
+      console.log('session after authentication in loginUser: ', req.session);
+
+      return res.status(200).json({
+        success: true,
+        msg: 'Login successful.',
+        user: req.session.user,
+      });
     }
     return res.status(403).json({ msg: 'Bad credentials.' });
   } catch (err) {

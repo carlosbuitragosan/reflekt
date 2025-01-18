@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { loginUser } from '../utils/auth';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthProvider';
 
 export const Login = () => {
+  const { setUser } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -19,9 +23,16 @@ export const Login = () => {
     e.preventDefault();
     const { username, password } = formData;
     try {
-      await loginUser(username, password);
-      window.location.href = '/diary-entry';
-
+      const response = await loginUser(username, password);
+      console.log('response from handleSubmit: ', response);
+      if (response.status === 200) {
+        const { user } = response.data;
+        console.log('logged in user : ', user);
+        setUser(user);
+        navigate('/diary-entry');
+      } else {
+        console.error('Login failed: ', response.msg);
+      }
       setFormData({
         username: '',
         password: '',

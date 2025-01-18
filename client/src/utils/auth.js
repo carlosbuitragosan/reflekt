@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuth } from '../components/AuthProvider';
 
 const API_BASE_URL = 'http://localhost:4001';
 
@@ -13,7 +14,8 @@ export const loginUser = async (username, password) => {
       username,
       password,
     });
-    return response.data;
+    console.log('response in loginUser: ', response);
+    return response;
   } catch (err) {
     if (err.response) {
       throw new Error(
