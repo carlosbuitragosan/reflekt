@@ -1,8 +1,6 @@
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 //set up session managment with express
 export const configureSession = (mongoClient, sessionSecret) =>
   session({

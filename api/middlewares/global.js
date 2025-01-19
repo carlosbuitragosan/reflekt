@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import passport from './passport.js';
 
 const corsOptions = {
   origin: 'http://localhost:5173',
@@ -17,4 +18,10 @@ export const configureGlobalMiddleware = (app) => {
 
   //set up http request logs
   app.use(morgan('dev'));
+
+  //Initialize Passport.js
+  app.use(passport.initialize());
+
+  // integrates with express-session to allow users to remain logged in
+  app.use(passport.session());
 };

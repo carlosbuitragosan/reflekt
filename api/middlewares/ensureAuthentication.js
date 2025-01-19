@@ -1,5 +1,5 @@
 export const ensureAuthentication = (req, res, next) => {
-  if (req.session.authenticated) {
+  if (req.isAuthenticated) {
     return next();
   }
   return res

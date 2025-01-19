@@ -13,9 +13,6 @@ const PORT = 4001;
 const sessionSecret = process.env.SESSION_SECRET;
 const mongoURI = process.env.MONGO_URI;
 
-//global middleware
-configureGlobalMiddleware(app);
-
 const startServer = async () => {
   try {
     //connect to mongoDB with MongoClient is needed to interact with connect-mongo in express session
@@ -32,6 +29,9 @@ const startServer = async () => {
 
     // express session configuration
     app.use(configureSession(mongoClient, sessionSecret));
+
+    //global middleware (cors, passport and others)
+    configureGlobalMiddleware(app);
 
     //Routes
     app.use('/', loginRoute);
