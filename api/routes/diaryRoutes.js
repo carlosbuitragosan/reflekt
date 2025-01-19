@@ -1,10 +1,14 @@
 import { Router } from 'express';
-import { ensureAuthentication } from '../middlewares/ensureAuthentication.js';
 
 const router = Router();
 
-router.get('/diary-entry', ensureAuthentication, (req, res) => {
-  return res.status(200).json({ user: req.session.user });
+router.get('/diary-entry', (req, res) => {
+  if (req.isAuthenticated) {
+    return res.status(200).json({ user: req.user });
+  }
+  return res
+    .status(403)
+    .json({ msg: 'You are not authorized to view this page.' });
 });
 
 export default router;
