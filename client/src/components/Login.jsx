@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 
 export const Login = () => {
+  // get setUser from useContext(AuthContext) in AuthProvider component
   const { setUser } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -24,10 +25,11 @@ export const Login = () => {
     const { username, password } = formData;
     try {
       const response = await loginUser(username, password);
-      console.log('response from handleSubmit: ', response);
+
       if (response.status === 200) {
         const { user } = response.data;
-        console.log('logged in user : ', user);
+        console.log('user from handleSubmit: ', user);
+        //set user from authController backend response in loginUser
         setUser(user);
         navigate('/diary-entry');
       } else {

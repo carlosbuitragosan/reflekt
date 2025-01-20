@@ -28,7 +28,6 @@ passport.use(
 
 //Determines which data should be stored in the session
 passport.serializeUser((user, done) => {
-  console.log('serializing user: ', user);
   return done(null, user._id);
 });
 
