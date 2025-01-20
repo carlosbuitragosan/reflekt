@@ -10,7 +10,6 @@ export const configureSession = (mongoClient, sessionSecret) =>
     store: MongoStore.create({
       //saves sessions in mongoDB 'sessions' collection
       client: mongoClient,
-      dbName: 'reflekt', // creates db if no db with that name is found
     }),
     cookie: {
       secure: false, // cookie only sent through https if true

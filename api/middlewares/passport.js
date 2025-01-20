@@ -1,44 +1,40 @@
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
-import { ObjectId } from 'mongodb';
+import User from '../models/user.js';
+import mongoose from 'mongoose';
 
 //set up LocalStrategy to validate user's credentials
 passport.use(
-  new LocalStrategy(
-    //req is not available here. passReqToCallback to access it.
-    { passReqToCallback: true },
-    async (req, username, password, done) => {
-      try {
-        const db = req.mongoClient.db('reflekt');
-        const user = await db.collection('users').findOne({ username });
-
-        if (!user) {
-          return done(null, false, { messge: 'No user found.' });
-        }
-        if (user.password !== password) {
-          return done(null, false, { message: 'Incorrect password.' });
-        }
-        return done(null, user);
-      } catch (err) {
-        return done(err);
+  new LocalStrategy(async (username, password, done) => {
+    try {
+      console.log('mongoose user: ', User);
+      console.log('mongoose connection: ', mongoose.connection.readyState);
+      console.log('mongoose db:', mongoose.connection.db.databaseName);
+      console.log('Username:', username);
+      console.log('Password:', password);
+      const user = await User.findOne({ username });
+      if (!user) {
+        return done(null, false, { message: 'No user found.' });
       }
-    },
-  ),
+      if (user.password !== password) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    } catch (err) {
+      return done(err);
+    }
+  }),
 );
 
 //Determines which data should be stored in the session
 passport.serializeUser((user, done) => {
-  return done(null, user._id);
+  return done(null, user.id);
 });
 
 //user can be retrieved from the session
-passport.deserializeUser(async (req, id, done) => {
+passport.deserializeUser(async (id, done) => {
   try {
-    const db = req.mongoClient.db('reflekt');
-    const user = await db
-      .collection('users')
-      .findOne({ _id: ObjectId.createFromHexString(id) });
-
+    const user = await User.findById(id);
     if (!user) {
       console.log('no user found with id: ', id);
       return done(null, false);

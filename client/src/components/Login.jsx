@@ -28,8 +28,7 @@ export const Login = () => {
 
       if (response.status === 200) {
         const { user } = response.data;
-        console.log('user from handleSubmit: ', user);
-        //set user from authController backend response in loginUser
+        //set user from backend response in authRoutes.js
         setUser(user);
         navigate('/diary-entry');
       } else {
