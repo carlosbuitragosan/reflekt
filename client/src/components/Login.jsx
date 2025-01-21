@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { loginUser } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthProvider';
+import { setUser } from '../redux/authSlice';
+import { useDispatch } from 'react-redux';
 
 export const Login = () => {
-  // get setUser from useContext(AuthContext) in AuthProvider component
-  const { setUser } = useAuth();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -28,8 +28,8 @@ export const Login = () => {
 
       if (response.status === 200) {
         const { user } = response.data;
-        //set user from backend response in authRoutes.js
-        setUser(user);
+        console.log('user from handleSubmit: ', user);
+        dispatch(setUser(user));
         navigate('/diary-entry');
       } else {
         console.error('Login failed: ', response.msg);
