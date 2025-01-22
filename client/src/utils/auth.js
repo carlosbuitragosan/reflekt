@@ -9,11 +9,11 @@ const apiClient = axios.create({
 
 export const loginUser = async (username, password) => {
   try {
-    const response = await apiClient.post('/login', {
+    const response = await apiClient.post('/api/auth/login', {
       username,
       password,
     });
-    console.log('response in loginUser: ', response);
+    console.log(response.data);
     return response;
   } catch (err) {
     if (err.response) {
@@ -22,5 +22,19 @@ export const loginUser = async (username, password) => {
       );
     }
     throw new Error('Unable to connect to server.');
+  }
+};
+
+export const logoutUser = async () => {
+  try {
+    const response = await apiClient.post('/api/auth/logout');
+    return response.data;
+  } catch (err) {
+    if (err.response) {
+      throw new Error(
+        err.response.data.msg || 'An error occurred during logout.',
+      );
+    }
+    throw new Error('Unable to connect to the server.');
   }
 };

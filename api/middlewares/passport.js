@@ -1,17 +1,11 @@
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import User from '../models/user.js';
-import mongoose from 'mongoose';
 
 //set up LocalStrategy to validate user's credentials
 passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
-      console.log('mongoose user: ', User);
-      console.log('mongoose connection: ', mongoose.connection.readyState);
-      console.log('mongoose db:', mongoose.connection.db.databaseName);
-      console.log('Username:', username);
-      console.log('Password:', password);
       const user = await User.findOne({ username });
       if (!user) {
         return done(null, false, { message: 'No user found.' });

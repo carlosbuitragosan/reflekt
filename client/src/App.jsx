@@ -4,7 +4,7 @@ import {
   Route,
   Routes,
 } from 'react-router-dom';
-import { Login } from './components/Login';
+import { LoginForm } from './components/LoginForm';
 import { DiaryEntry } from './components/DiaryEntry';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import './App.css';
@@ -13,7 +13,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LoginForm />} />
         <Route
           path="/diary-entry"
           element={

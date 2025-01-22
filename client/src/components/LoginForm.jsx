@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { setUser } from '../redux/authSlice';
 import { useDispatch } from 'react-redux';
 
-export const Login = () => {
+export const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
@@ -28,7 +28,6 @@ export const Login = () => {
 
       if (response.status === 200) {
         const { user } = response.data;
-        console.log('user from handleSubmit: ', user);
         dispatch(setUser(user));
         navigate('/diary-entry');
       } else {

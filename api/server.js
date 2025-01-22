@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { connectToMongoClient, connectToMongoose } from './utils/database.js';
 import { configureGlobalMiddleware } from './middlewares/global.js';
 import { configureSession } from './middlewares/expressSession.js';
-import loginRoute from './routes/authRoutes.js';
+import authRoute from './routes/authRoutes.js';
 import diaryRoute from './routes/diaryRoutes.js';
 
 dotenv.config();
@@ -34,8 +34,8 @@ const startServer = async () => {
     configureGlobalMiddleware(app);
 
     //Routes
-    app.use('/', loginRoute);
-    app.use('/', diaryRoute);
+    app.use('/api/auth', authRoute);
+    app.use('/api', diaryRoute);
 
     // start express server
     app.listen(PORT, () => {
