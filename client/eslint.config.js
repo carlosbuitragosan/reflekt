@@ -4,6 +4,7 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import prettier from 'eslint-plugin-prettier';
+import noImport from 'eslint-plugin-import';
 
 export default [
   { ignores: ['dist'] },
@@ -24,12 +25,15 @@ export default [
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       prettier,
+      import: noImport,
     },
     extends: [
       'eslint:recommended',
       'plugin:react/recommended',
       'plugin:react-hooks/recommended',
       'plugin:prettier/recommended',
+      'plugin:import/warnings',
+      'plugin:import/errors',
     ],
     rules: {
       ...js.configs.recommended.rules,
@@ -41,6 +45,7 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+      'import/no-unresolved': 'error',
     },
   },
 ];

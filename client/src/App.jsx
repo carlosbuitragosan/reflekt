@@ -8,12 +8,14 @@ import { LoginForm } from './components/LoginForm';
 import { DiaryEntry } from './components/DiaryEntry';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import './App.css';
+import { RegisterForm } from './components/RegisterForm';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterForm />} />
         <Route
           path="/diary-entry"
           element={

@@ -8,7 +8,7 @@ export const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
   });
 
@@ -22,9 +22,9 @@ export const LoginForm = () => {
 
   const handlesubmit = async (e) => {
     e.preventDefault();
-    const { username, password } = formData;
+    const { email, password } = formData;
     try {
-      const response = await loginUser(username, password);
+      const response = await loginUser(email, password);
 
       if (response.status === 200) {
         const { user } = response.data;
@@ -34,7 +34,7 @@ export const LoginForm = () => {
         console.error('Login failed: ', response.msg);
       }
       setFormData({
-        username: '',
+        email: '',
         password: '',
       });
     } catch (err) {
@@ -47,28 +47,36 @@ export const LoginForm = () => {
       <h1>Login</h1>
       <form onSubmit={handlesubmit}>
         <div>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="email">email</label>
           <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
             onChange={handleChange}
+            required
           />
         </div>
 
         <div>
           <label htmlFor="password">Password</label>
           <input
-            type="text"
+            type="password"
             id="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
+            required
           />
         </div>
         <button type="submit">Log In</button>
       </form>
+      <div>
+        <p>Not a user?</p>
+        <button onClick={() => navigate('/register')}>
+          Register here
+        </button>
+      </div>
     </div>
   );
 };

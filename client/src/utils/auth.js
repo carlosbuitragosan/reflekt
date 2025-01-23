@@ -7,13 +7,12 @@ const apiClient = axios.create({
   withCredentials: true, //Ensure cookies are included
 });
 
-export const loginUser = async (username, password) => {
+export const loginUser = async (email, password) => {
   try {
     const response = await apiClient.post('/api/auth/login', {
-      username,
+      email,
       password,
     });
-    console.log(response.data);
     return response;
   } catch (err) {
     if (err.response) {
@@ -36,5 +35,22 @@ export const logoutUser = async () => {
       );
     }
     throw new Error('Unable to connect to the server.');
+  }
+};
+
+export const registerUser = async (email, password) => {
+  try {
+    const response = await apiClient.post('/api/auth/register', {
+      email,
+      password,
+    });
+    return response;
+  } catch (err) {
+    if (err.response) {
+      throw new Error(
+        err.response.data.msg ||
+          'An error occurred during registration.',
+      );
+    }
   }
 };

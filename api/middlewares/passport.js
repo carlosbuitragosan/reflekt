@@ -2,22 +2,25 @@ import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import User from '../models/user.js';
 
-//set up LocalStrategy to validate user's credentials
+//set up LocalStrategy to validate user's credentials. by default, LocalStrategy looks for a username. when using email that needs to be specified explicitly.
 passport.use(
-  new LocalStrategy(async (username, password, done) => {
-    try {
-      const user = await User.findOne({ username });
-      if (!user) {
-        return done(null, false, { message: 'No user found.' });
+  new LocalStrategy(
+    { usernameField: 'email' },
+    async (email, password, done) => {
+      try {
+        const user = await User.findOne({ email });
+        if (!user) {
+          return done(null, false, { message: 'No user found.' });
+        }
+        if (user.password !== password) {
+          return done(null, false, { message: 'Incorrect password.' });
+        }
+        return done(null, user);
+      } catch (err) {
+        return done(err);
       }
-      if (user.password !== password) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    } catch (err) {
-      return done(err);
-    }
-  }),
+    },
+  ),
 );
 
 //Determines which data should be stored in the session
