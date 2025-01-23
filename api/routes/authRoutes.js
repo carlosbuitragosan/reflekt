@@ -9,7 +9,7 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
   return res.status(200).json({
     success: true,
     msg: 'Login successful',
-    user: req.user,
+    user: { email: req.user.email },
   });
 });
 
