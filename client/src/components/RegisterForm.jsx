@@ -7,6 +7,7 @@ import { setUser } from '../redux/authSlice';
 export const RegisterForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [viewPassword, setViewPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -38,29 +39,39 @@ export const RegisterForm = () => {
     }
   };
 
+  const togglePassword = () => {
+    setViewPassword((prevState) => !prevState);
+  };
+
   return (
     <div>
       <h1>Register</h1>
       <form onSubmit={handlesubmit}>
-        <label htmlFor="email">email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-
-        <label htmlFor="password">password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
+        <div>
+          <label htmlFor="email">email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="password">password</label>
+          <input
+            type={viewPassword ? 'text' : 'password'}
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          <button type="button" onClick={togglePassword}>
+            {viewPassword ? 'hide' : 'show'}
+          </button>
+        </div>
         <button type="submit">Register</button>
       </form>
     </div>

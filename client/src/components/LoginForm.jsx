@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 export const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [viewPassword, setViewPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -42,6 +43,10 @@ export const LoginForm = () => {
     }
   };
 
+  const togglePassword = () => {
+    setViewPassword((prevState) => !prevState);
+  };
+
   return (
     <div>
       <h1>Login</h1>
@@ -61,13 +66,16 @@ export const LoginForm = () => {
         <div>
           <label htmlFor="password">Password</label>
           <input
-            type="password"
+            type={viewPassword ? 'text' : 'password'}
             id="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
             required
           />
+          <button type="button" onClick={togglePassword}>
+            {viewPassword ? 'hide' : 'show'}
+          </button>
         </div>
         <button type="submit">Log In</button>
       </form>
