@@ -8,6 +8,7 @@ export const RegisterForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [viewPassword, setViewPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -35,6 +36,8 @@ export const RegisterForm = () => {
       }
       setFormData({ email: '', password: '' });
     } catch (err) {
+      setErrorMessage(err.message);
+      setFormData({ email: '', password: '' });
       console.error(err.message);
     }
   };
@@ -74,6 +77,11 @@ export const RegisterForm = () => {
         </div>
         <button type="submit">Register</button>
       </form>
+      {errorMessage && (
+        <div>
+          <p>{errorMessage}</p>
+        </div>
+      )}
     </div>
   );
 };
