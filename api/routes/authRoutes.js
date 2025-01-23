@@ -14,21 +14,13 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
 });
 
 // logout route
-router.post('/logout', (req, res) => {
+router.post('/logout', (req, res, next) => {
   req.logout((err) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ success: false, msg: 'Logout failed.', error: err });
-    }
+    if (err) return next();
+
     req.session.destroy((err) => {
-      if (err) {
-        return res.status(500).json({
-          success: false,
-          msg: 'Error destroying session',
-          error: err,
-        });
-      }
+      if (err) return next();
+
       res.clearCookie('connect.sid');
       return res.status(200).json({ success: true, msg: 'Logout successful.' });
     });
@@ -36,26 +28,24 @@ router.post('/logout', (req, res) => {
 });
 
 // register route
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res
-        .status(400)
-        .json({ success: false, msg: 'User already exists.' });
+      const error = new Error('User already exists.');
+      error.statusCode = 400;
+      throw error;
     }
     const newUser = new User({ email, password });
     await newUser.save();
     return res.status(201).json({
       success: true,
       msg: 'User registered successfully.',
-      user: { email: newUser.email, password: newUser.password },
+      user: { email: newUser.email },
     });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: 'Error registering user: ', error: err });
+    next(err);
   }
 });
 

@@ -22,7 +22,6 @@ export const RegisterForm = () => {
 
   const handlesubmit = async (e) => {
     e.preventDefault();
-    console.log('form submitted');
     const { email, password } = formData;
     try {
       const response = await registerUser(email, password);
