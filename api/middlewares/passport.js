@@ -1,6 +1,7 @@
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
-import User from '../models/user.js';
+import User from '../utils/user.js';
+import bcrypt from 'bcrypt';
 
 //set up LocalStrategy to validate user's credentials. by default, LocalStrategy looks for a username. when using email that needs to be specified explicitly.
 passport.use(
@@ -12,7 +13,7 @@ passport.use(
         if (!user) {
           return done(null, false, { message: 'No user found.' });
         }
-        if (user.password !== password) {
+        if (!(await bcrypt.compare(password, user.password))) {
           return done(null, false, { message: 'Incorrect password.' });
         }
         return done(null, user);
@@ -25,11 +26,18 @@ passport.use(
 
 //Determines which data should be stored in the session
 passport.serializeUser((user, done) => {
-  return done(null, user.id);
+  try {
+    console.log('serializeUser:', user.id);
+    done(null, user.id);
+  } catch (err) {
+    console.error('Error in serializing user: ', err);
+    return done(err);
+  }
 });
 
 //user can be retrieved from the session
 passport.deserializeUser(async (id, done) => {
+  console.log('deserializeUser with id:', id);
   try {
     const user = await User.findById(id);
     if (!user) {

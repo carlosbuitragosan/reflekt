@@ -1,6 +1,7 @@
 import express from 'express';
 import passport from 'passport';
-import User from '../models/user.js';
+import User from '../utils/user.js';
+import bcrypt from 'bcrypt';
 
 const router = express.Router();
 
@@ -29,16 +30,25 @@ router.post('/logout', (req, res, next) => {
 
 // register route
 router.post('/register', async (req, res, next) => {
+  console.log('Session in register:', req.session);
   const { email, password } = req.body;
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       const error = new Error('User already exists.');
       error.statusCode = 400;
-      throw error;
+      return next(error);
     }
-    const newUser = new User({ email, password });
+    const salt = await bcrypt.genSalt(10);
+    console.log('Generated salt:', salt);
+    const hash = await bcrypt.hash(password, salt);
+    console.log('Generated hash:', hash);
+
+    const newUser = new User({ email, password: hash });
     await newUser.save();
+    console.log('Is session available:', req.session ? true : false);
+    console.log('Response cookies:', res.getHeader('Set-Cookie'));
+
     return res.status(201).json({
       success: true,
       msg: 'User registered successfully.',

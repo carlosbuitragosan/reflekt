@@ -12,19 +12,29 @@ export const RegisterForm = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    confirmPassword: '',
   });
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log(name);
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+    //clear error message when user starts typing in password fields
+    if (name === 'password' || name === 'confirmPassword') {
+      setErrorMessage('');
+    }
   };
 
   const handlesubmit = async (e) => {
     e.preventDefault();
-    const { email, password } = formData;
+    const { email, password, confirmPassword } = formData;
+    if (password !== confirmPassword) {
+      setErrorMessage('Passwords do not match');
+      return;
+    }
     try {
       const response = await registerUser(email, password);
       if (response.status === 201) {
@@ -57,7 +67,7 @@ export const RegisterForm = () => {
             id="email"
             name="email"
             value={formData.email}
-            onChange={handleChange}
+            onChange={handleInputChange}
             required
           />
         </div>
@@ -68,12 +78,23 @@ export const RegisterForm = () => {
             id="password"
             name="password"
             value={formData.password}
-            onChange={handleChange}
+            onChange={handleInputChange}
             required
           />
           <button type="button" onClick={togglePassword}>
             {viewPassword ? 'hide' : 'show'}
           </button>
+        </div>
+        <div>
+          <label htmlFor="confirmPassword">Confirm password</label>
+          <input
+            type={viewPassword ? 'text' : 'password'}
+            id="confirmPassword"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleInputChange}
+            required
+          />
         </div>
         <button type="submit">Register</button>
       </form>
