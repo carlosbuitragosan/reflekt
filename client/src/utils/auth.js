@@ -47,10 +47,7 @@ export const registerUser = async (email, password) => {
     return response;
   } catch (err) {
     if (err.response) {
-      throw new Error(
-        err.response.data.msg ||
-          'An error occurred during registration.',
-      );
+      throw err;
     }
   }
 };

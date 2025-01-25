@@ -31,12 +31,15 @@ export const RegisterForm = () => {
   const handlesubmit = async (e) => {
     e.preventDefault();
     const { email, password, confirmPassword } = formData;
-    if (password !== confirmPassword) {
-      setErrorMessage('Passwords do not match');
-      return;
-    }
+
     try {
       const response = await registerUser(email, password);
+
+      if (password !== confirmPassword) {
+        setErrorMessage('Passwords do not match');
+        return;
+      }
+
       if (response.status === 201) {
         const { user } = response.data;
         dispatch(setUser(user));
@@ -44,11 +47,16 @@ export const RegisterForm = () => {
       } else {
         console.error('Registration failed: ', response.msg);
       }
-      setFormData({ email: '', password: '' });
     } catch (err) {
-      setErrorMessage(err.message);
-      setFormData({ email: '', password: '', confirmPassword: '' });
-      console.error(err.message);
+      if (err.response) {
+        console.log('there is an axios error response');
+        setErrorMessage(
+          err.response.data.msg ||
+            'An error occurred during registration.',
+        );
+      } else {
+        setErrorMessage(err.message);
+      }
     }
   };
 
