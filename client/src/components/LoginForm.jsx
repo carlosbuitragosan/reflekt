@@ -14,13 +14,18 @@ export const LoginForm = () => {
     email: '',
     password: '',
   });
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+    //clear error message when user starts typing in password fields
+    if (name === 'password' || name === 'confirmPassword') {
+      setErrorMessage('');
+    }
   };
 
   const handlesubmit = async (e) => {
@@ -28,7 +33,7 @@ export const LoginForm = () => {
     const { email, password } = formData;
     try {
       const response = await loginUser(email, password);
-
+      console.log('response: ', response);
       if (response.status === 200) {
         const { user } = response.data;
         dispatch(setUser(user));
@@ -42,6 +47,7 @@ export const LoginForm = () => {
       });
     } catch (err) {
       console.error(err.message);
+      setErrorMessage(err.message);
     }
   };
 
@@ -62,7 +68,7 @@ export const LoginForm = () => {
             id="email"
             name="email"
             value={formData.email}
-            onChange={handleChange}
+            onChange={handleInputChange}
             required
           />
         </div>
@@ -74,7 +80,7 @@ export const LoginForm = () => {
             id="password"
             name="password"
             value={formData.password}
-            onChange={handleChange}
+            onChange={handleInputChange}
             required
           />
           <button type="button" onClick={togglePassword}>
@@ -84,6 +90,11 @@ export const LoginForm = () => {
         <button type="submit">Log In</button>
       </form>
       <div>
+        {errorMessage && (
+          <div>
+            <p>{errorMessage}</p>
+          </div>
+        )}
         <p>Not a user?</p>
         <button onClick={() => navigate('/register')}>
           Register here

@@ -47,7 +47,7 @@ export const RegisterForm = () => {
       setFormData({ email: '', password: '' });
     } catch (err) {
       setErrorMessage(err.message);
-      setFormData({ email: '', password: '' });
+      setFormData({ email: '', password: '', confirmPassword: '' });
       console.error(err.message);
     }
   };

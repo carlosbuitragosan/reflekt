@@ -6,12 +6,21 @@ import bcrypt from 'bcrypt';
 const router = express.Router();
 
 //login route
-router.post('/login', passport.authenticate('local'), (req, res) => {
-  return res.status(200).json({
-    success: true,
-    msg: 'Login successful',
-    user: { email: req.user.email },
-  });
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) return next(err);
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        msg: info.message || 'Login failed.',
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      msg: 'Login successful',
+      user: { email: user.email },
+    });
+  })(req, res, next);
 });
 
 // logout route
