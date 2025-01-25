@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { loginUser } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
-import { setUser } from '../redux/authSlice';
-import { useDispatch } from 'react-redux';
+import { selectIsAuthenticated, setUser } from '../redux/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser } from '../redux/authSlice';
 
 export const LoginForm = () => {
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [viewPassword, setViewPassword] = useState(false);
@@ -46,7 +48,9 @@ export const LoginForm = () => {
   const togglePassword = () => {
     setViewPassword((prevState) => !prevState);
   };
-
+  if (isAuthenticated) {
+    navigate('/diary-entry');
+  }
   return (
     <div>
       <h1>Login</h1>
