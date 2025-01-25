@@ -48,9 +48,10 @@ export const RegisterForm = () => {
         console.error('Registration failed: ', response.msg);
       }
     } catch (err) {
+      // handle errorrs from axios
       if (err.response) {
-        console.log('there is an axios error response');
         setErrorMessage(
+          // display the error message from the server. 'data' containes the response from the server
           err.response.data.msg ||
             'An error occurred during registration.',
         );

@@ -2,6 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import User from '../utils/user.js';
 import bcrypt from 'bcrypt';
+import { passwordRegex } from '../utils/passwordRegex.js';
 
 const router = express.Router();
 
@@ -39,7 +40,6 @@ router.post('/logout', (req, res, next) => {
 
 // register route
 router.post('/register', async (req, res, next) => {
-  console.log('Session in register:', req.session);
   const { email, password } = req.body;
   try {
     const existingUser = await User.findOne({ email });
@@ -48,6 +48,15 @@ router.post('/register', async (req, res, next) => {
       error.statusCode = 400;
       return next(error);
     }
+
+    if (!passwordRegex.test(password)) {
+      const error = new Error(
+        'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)',
+      );
+      error.statusCode = 400;
+      return next(error);
+    }
+
     const salt = await bcrypt.genSalt(10);
     console.log('Generated salt:', salt);
     const hash = await bcrypt.hash(password, salt);

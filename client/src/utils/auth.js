@@ -40,13 +40,16 @@ export const logoutUser = async () => {
 
 export const registerUser = async (email, password) => {
   try {
+    //send data to the server
     const response = await apiClient.post('/api/auth/register', {
       email,
       password,
     });
     return response;
   } catch (err) {
+    //check if the err contains a response object from axios
     if (err.response) {
+      //re-throw the error with the message from the server
       throw err;
     }
   }
