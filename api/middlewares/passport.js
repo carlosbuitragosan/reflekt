@@ -27,7 +27,6 @@ passport.use(
 //Determines which data should be stored in the session
 passport.serializeUser((user, done) => {
   try {
-    console.log('serializeUser:', user.id);
     done(null, user.id);
   } catch (err) {
     console.error('Error in serializing user: ', err);
@@ -37,7 +36,6 @@ passport.serializeUser((user, done) => {
 
 //user can be retrieved from the session
 passport.deserializeUser(async (id, done) => {
-  console.log('deserializeUser with id:', id);
   try {
     const user = await User.findById(id);
     if (!user) {

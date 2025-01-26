@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { logoutUser } from '../redux/authSlice.js';
+import { logoutUserAction } from '../redux/authSlice.js';
+import { logoutUser } from '../utils/auth.js';
 
 export const DiaryEntry = () => {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ export const DiaryEntry = () => {
   const handleLogout = async () => {
     try {
       await logoutUser();
-      dispatch(logoutUser());
+      dispatch(logoutUserAction());
       navigate('/login');
     } catch (err) {
       console.error('Logout failed: ', err.message);

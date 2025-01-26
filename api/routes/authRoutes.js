@@ -10,29 +10,44 @@ const router = express.Router();
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) return next(err);
+
     if (!user) {
       return res.status(401).json({
         success: false,
         msg: info.message || 'Login failed.',
       });
     }
-    return res.status(200).json({
-      success: true,
-      msg: 'Login successful',
-      user: { email: user.email },
+
+    //Login user to create a session
+    req.login(user, (err) => {
+      if (err) return next(err);
+
+      return res.status(200).json({
+        success: true,
+        msg: 'Login successful',
+        user: { email: user.email },
+      });
     });
   })(req, res, next);
 });
 
 // logout route
 router.post('/logout', (req, res, next) => {
+  console.log('Logging out user:', req.user);
   req.logout((err) => {
+    console.log('Error logging out:', err);
     if (err) return next();
 
+    // Remove session data
     req.session.destroy((err) => {
-      if (err) return next();
-
+      if (err) {
+        console.log('Error destroying session:', err);
+        return next();
+      }
+      console.log('Session destroyed:', req.session);
+      // Clear the session cookie
       res.clearCookie('connect.sid');
+      console.log('Response cookies:', res.getHeader('Set-Cookie'));
       return res.status(200).json({ success: true, msg: 'Logout successful.' });
     });
   });
