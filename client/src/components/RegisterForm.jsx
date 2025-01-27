@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../utils/auth';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/authSlice';
+import { passwordRegex } from '../utils/passwordRegex.js';
 
 export const RegisterForm = () => {
   const navigate = useNavigate();
@@ -32,13 +33,17 @@ export const RegisterForm = () => {
     e.preventDefault();
     const { email, password, confirmPassword } = formData;
 
+    if (password !== confirmPassword) {
+      setErrorMessage('Passwords do not match');
+      return;
+    }
+    // if (!passwordRegex.test(password)) {
+    //   setErrorMessage(
+    //     'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)',
+    //   );
+    // }
     try {
       const response = await registerUser(email, password);
-
-      if (password !== confirmPassword) {
-        setErrorMessage('Passwords do not match');
-        return;
-      }
 
       if (response.status === 201) {
         const { user } = response.data;

@@ -2,7 +2,6 @@ import express from 'express';
 import passport from 'passport';
 import User from '../models/User.js';
 import bcrypt from 'bcrypt';
-import { passwordRegex } from '../utils/passwordRegex.js';
 
 const router = express.Router();
 
@@ -59,24 +58,22 @@ router.post('/register', async (req, res, next) => {
       return next(error);
     }
 
-    if (!passwordRegex.test(password)) {
-      const error = new Error(
-        'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)',
-      );
-      error.statusCode = 400;
-      return next(error);
-    }
-
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
-
+    console.log(hash);
     const newUser = new User({ email, password: hash });
+    console.log(newUser);
     await newUser.save();
 
-    return res.status(201).json({
-      success: true,
-      msg: 'User registered successfully.',
-      user: { email: newUser.email },
+    //Login user to create a session
+    req.login(newUser, (err) => {
+      if (err) return next(err);
+
+      return res.status(201).json({
+        success: true,
+        msg: 'User registered successfully.',
+        user: { email: newUser.email },
+      });
     });
   } catch (err) {
     next(err);
