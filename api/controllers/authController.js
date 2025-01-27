@@ -1,7 +1,5 @@
 import passport from 'passport';
-import User from '../models/User.js';
-import bcrypt from 'bcrypt';
-import { logoutUser } from '../services/userService.js';
+import { logoutUser, registerUser } from '../services/userService.js';
 
 export const loginHandler = (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
@@ -39,19 +37,7 @@ export const logoutHandler = async (req, res, next) => {
 export const registerHandler = async (req, res, next) => {
   const { email, password } = req.body;
   try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      const error = new Error('User already exists.');
-      error.statusCode = 400;
-      return next(error);
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
-    console.log(hash);
-    const newUser = new User({ email, password: hash });
-    console.log(newUser);
-    await newUser.save();
+    const newUser = await registerUser({ email, password });
 
     //Login user to create a session
     req.login(newUser, (err) => {
