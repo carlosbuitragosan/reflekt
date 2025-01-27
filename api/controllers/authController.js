@@ -1,6 +1,7 @@
 import passport from 'passport';
 import User from '../models/User.js';
 import bcrypt from 'bcrypt';
+import { logoutUser } from '../services/userService.js';
 
 export const loginHandler = (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
@@ -26,20 +27,13 @@ export const loginHandler = (req, res, next) => {
   })(req, res, next);
 };
 
-export const logoutHandler = (req, res, next) => {
-  req.logout((err) => {
-    if (err) return next();
-
-    // Remove session data
-    req.session.destroy((err) => {
-      if (err) {
-        return next();
-      }
-      // Clear the session cookie
-      res.clearCookie('connect.sid');
-      return res.status(200).json({ success: true, msg: 'Logout successful.' });
-    });
-  });
+export const logoutHandler = async (req, res, next) => {
+  try {
+    await logoutUser(req, res);
+    return res.status(200).json({ success: true, msg: 'Logout successful.' });
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const registerHandler = async (req, res, next) => {
