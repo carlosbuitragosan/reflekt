@@ -1,6 +1,6 @@
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
-import User from '../utils/user.js';
+import User from '../models/User.js';
 import bcrypt from 'bcrypt';
 
 //set up LocalStrategy to validate user's credentials. by default, LocalStrategy looks for a username. when using email that needs to be specified explicitly.

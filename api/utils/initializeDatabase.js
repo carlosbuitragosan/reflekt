@@ -1,4 +1,4 @@
-import { connectToMongoClient, connectToMongoose } from './database.js';
+import { connectToMongoClient, connectToMongoose } from '../config/database.js';
 
 export const initializeDatabase = async (mongoURI) => {
   //connect to mongoDB with MongoClient is needed to interact with connect-mongo in express session

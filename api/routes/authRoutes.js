@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-import User from '../utils/user.js';
+import User from '../models/User.js';
 import bcrypt from 'bcrypt';
 import { passwordRegex } from '../utils/passwordRegex.js';
 
@@ -33,21 +33,16 @@ router.post('/login', (req, res, next) => {
 
 // logout route
 router.post('/logout', (req, res, next) => {
-  console.log('Logging out user:', req.user);
   req.logout((err) => {
-    console.log('Error logging out:', err);
     if (err) return next();
 
     // Remove session data
     req.session.destroy((err) => {
       if (err) {
-        console.log('Error destroying session:', err);
         return next();
       }
-      console.log('Session destroyed:', req.session);
       // Clear the session cookie
       res.clearCookie('connect.sid');
-      console.log('Response cookies:', res.getHeader('Set-Cookie'));
       return res.status(200).json({ success: true, msg: 'Logout successful.' });
     });
   });
@@ -73,14 +68,10 @@ router.post('/register', async (req, res, next) => {
     }
 
     const salt = await bcrypt.genSalt(10);
-    console.log('Generated salt:', salt);
     const hash = await bcrypt.hash(password, salt);
-    console.log('Generated hash:', hash);
 
     const newUser = new User({ email, password: hash });
     await newUser.save();
-    console.log('Is session available:', req.session ? true : false);
-    console.log('Response cookies:', res.getHeader('Set-Cookie'));
 
     return res.status(201).json({
       success: true,

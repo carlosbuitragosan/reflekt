@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import passport from './passport.js';
+import passport from '../config/passport.js';
 
 const corsOptions = {
   origin: 'http://localhost:5173',

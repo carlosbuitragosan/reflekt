@@ -1,4 +1,4 @@
-import { configureSession } from '../middlewares/expressSession.js';
+import { configureSession } from '../config/expressSession.js';
 import { configureGlobalMiddleware } from '../middlewares/global.js';
 import authRoute from '../routes/authRoutes.js';
 import diaryRoute from '../routes/diaryRoutes.js';

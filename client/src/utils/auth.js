@@ -26,12 +26,9 @@ export const loginUser = async (email, password) => {
 
 export const logoutUser = async () => {
   try {
-    console.log('sending logout request');
     const response = await apiClient.post('/api/auth/logout');
-    console.log('logout response:', response.data);
     return response.data;
   } catch (err) {
-    console.error('Error logging out:', err);
     if (err.response) {
       throw new Error(
         err.response.data.msg || 'An error occurred during logout.',
