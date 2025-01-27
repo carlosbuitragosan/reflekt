@@ -37,11 +37,14 @@ export const RegisterForm = () => {
       setErrorMessage('Passwords do not match');
       return;
     }
-    // if (!passwordRegex.test(password)) {
-    //   setErrorMessage(
-    //     'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)',
-    //   );
-    // }
+
+    if (!passwordRegex.test(password)) {
+      setErrorMessage(
+        'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)',
+      );
+      return;
+    }
+
     try {
       const response = await registerUser(email, password);
 

@@ -1,5 +1,5 @@
 export const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{8,}$/;
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W)[^\s]{8,}$/;
 
 // /^$/ = start/end of the string
 
@@ -11,5 +11,6 @@ export const passwordRegex =
 
 // /[]/ = character set. It matches any one of the characters inside the square brackets.
 
-// /[a-zA-Z\d@$!%*?&]/ = the string must contain at least one character from the set: lowercase, uppercase, digit, or special character.
-// /[a-zA-Z\d@$!%*?&]{8,}/ any one of those and at least 8 characters long. If it was this: {8}, it would mean exactly 8 characters long.
+// /(?=.*\W)/ = the string must contain at least one special character (non-word character). \W
+
+// // /[^\s]{8,}/ = matches any character that is not a whitespace character, and it must be at least 8 characters long.
