@@ -1,12 +1,13 @@
 import express from 'express';
 import {
-  googleSignInCallbackHandler,
-  googleSignInHandler,
   loginHandler,
   logoutHandler,
   registerHandler,
-} from '../controllers/authController.js';
-
+} from '../controllers/localAuthController.js';
+import {
+  googleSignInCallbackHandler,
+  googleSignInHandler,
+} from '../controllers/googleAuthController.js';
 const router = express.Router();
 
 //login route
