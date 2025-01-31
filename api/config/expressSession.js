@@ -3,7 +3,6 @@ import MongoStore from 'connect-mongo';
 
 //set up session managment with express
 export const configureSession = (mongoClient, sessionSecret) => {
-  console.log('Configuring session middleware');
   return session({
     secret: sessionSecret, //used to sign the session ID cookie
     resave: false,

@@ -9,7 +9,6 @@ const corsOptions = {
 };
 
 export const configureGlobalMiddleware = (app) => {
-  console.log('applying global middleware (passport)');
   // bodyparser setup to handle req and res
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());

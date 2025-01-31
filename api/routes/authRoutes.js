@@ -8,6 +8,10 @@ import {
   googleSignInCallbackHandler,
   googleSignInHandler,
 } from '../controllers/googleAuthController.js';
+import {
+  githubSignInCallbackHandler,
+  githubSignInHandler,
+} from '../controllers/githubAuthControler.js';
 const router = express.Router();
 
 //login route
@@ -24,5 +28,9 @@ router.get('/google', googleSignInHandler);
 
 // Handle google sign in callback, process user data, and redirect to the client
 router.get('/google/callback', googleSignInCallbackHandler);
+
+// Github routes
+router.get('/github', githubSignInHandler);
+router.get('/github/callback', githubSignInCallbackHandler);
 
 export default router;

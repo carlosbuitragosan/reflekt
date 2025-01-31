@@ -18,7 +18,6 @@ export const RegisterForm = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(name);
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
@@ -29,6 +28,7 @@ export const RegisterForm = () => {
     }
   };
 
+  // handle form submission
   const handlesubmit = async (e) => {
     e.preventDefault();
     const { email, password, confirmPassword } = formData;
@@ -47,7 +47,6 @@ export const RegisterForm = () => {
 
     try {
       const response = await registerUser(email, password);
-
       if (response.status === 201) {
         const { user } = response.data;
         dispatch(setUser(user));

@@ -2,10 +2,11 @@ import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import User from '../models/User.js';
 import bcrypt from 'bcrypt';
-//js executes the import as a side effect, and the google strategy is registered with passport
+//js executes the import as a side effect, and the google & github strategies are registered with passport
 import './googleOAuth.js';
+import './githubOAuth.js';
 
-//set up LocalStrategy to validate user's credentials. by default, LocalStrategy looks for a username. when using email that needs to be specified explicitly.
+//set up LocalStrategy to validate user's credentials. by default, LocalStrategy looks for a username. when using email, it needs to be specified explicitly.
 passport.use(
   new LocalStrategy(
     { usernameField: 'email' },

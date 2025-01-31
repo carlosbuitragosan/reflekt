@@ -1,20 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { loginUser } from '../utils/auth';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { selectIsAuthenticated, setUser } from '../redux/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from '../redux/authSlice';
 
 export const LoginForm = () => {
-  const isAuthenticated = useSelector(selectIsAuthenticated);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   const [viewPassword, setViewPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-  const [errorMessage, setErrorMessage] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -28,12 +28,31 @@ export const LoginForm = () => {
     }
   };
 
+  const handleGoogleSignin = async () => {
+    window.open('http://localhost:4001/api/auth/google', '_self');
+  };
+
+  const handleGithubSignin = async () => {
+    window.open('http://localhost:4001/api/auth/github', '_self');
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const email = urlParams.get('email');
+    const googleId = urlParams.get('googleId');
+    const githubId = urlParams.get('githubId');
+
+    if (email && (googleId || githubId)) {
+      dispatch(setUser({ email, googleId, githubId }));
+      navigate('/diary-entry');
+    }
+  }, [location.search, dispatch, navigate]);
+
   const handlesubmit = async (e) => {
     e.preventDefault();
     const { email, password } = formData;
     try {
       const response = await loginUser(email, password);
-      console.log('response: ', response);
       if (response.status === 200) {
         const { user } = response.data;
         dispatch(setUser(user));
@@ -95,9 +114,14 @@ export const LoginForm = () => {
             <p>{errorMessage}</p>
           </div>
         )}
-        <p>Not a user?</p>
         <button onClick={() => navigate('/register')}>
-          Register here
+          Register
+        </button>
+        <button onClick={handleGoogleSignin}>
+          Sign In with Google
+        </button>
+        <button onClick={handleGithubSignin}>
+          Sign In with Github
         </button>
       </div>
     </div>
