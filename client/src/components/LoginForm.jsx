@@ -110,7 +110,7 @@ export const LoginForm = () => {
       </form>
       <div>
         {errorMessage && (
-          <div>
+          <div className="error-message">
             <p>{errorMessage}</p>
           </div>
         )}
