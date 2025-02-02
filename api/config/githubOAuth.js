@@ -10,22 +10,26 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callback: 'http://localhost:4001/api/auth/github/callback',
+      callbackURL: 'http://localhost:4001/api/auth/github/callback',
     },
-    async (accessToke, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
+      console.log('github profile: ', profile);
       try {
-        let user = await User.findOne({ githubId: profile.id });
+        const user = await User.findOne({ githubId: profile.id });
 
-        if (!user) {
-          user = new User({
-            githubId: profile.id,
-            email: profile.emails?.[0]?.value,
-          });
-          await user.save();
+        if (user) {
+          return done(null, user);
         }
-        return done(null, user);
+
+        const newUser = new User({
+          githubId: profile.id,
+          email: profile.emails[0].value,
+        });
+
+        await newUser.save();
+        return done(null, newUser);
       } catch (err) {
-        return done(err);
+        return done(err, null);
       }
     },
   ),

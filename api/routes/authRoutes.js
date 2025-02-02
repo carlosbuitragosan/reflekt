@@ -12,6 +12,7 @@ import {
   githubSignInCallbackHandler,
   githubSignInHandler,
 } from '../controllers/githubAuthControler.js';
+
 const router = express.Router();
 
 //login route

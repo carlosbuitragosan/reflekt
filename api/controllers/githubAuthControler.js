@@ -6,11 +6,12 @@ export const githubSignInHandler = passport.authenticate('github', {
 });
 
 // Github sign in callback handler
-export const githubSignInCallbackHandler = (req, res) => {
+export const githubSignInCallbackHandler = (req, res, next) => {
   passport.authenticate('github', {
     session: false,
     failureRedirect: '/login',
   })(req, res, () => {
+    console.log('user from callback: ', req.user);
     if (req.user) {
       console.log('Github user authenticated: ', req.user);
       return res.redirect(
