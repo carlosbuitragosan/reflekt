@@ -56,19 +56,12 @@ describe('Login Form', () => {
   it('should navigate to google OAuth page on google button click', async () => {
     await googleButton.click();
     const currentUrl = await browser.getUrl();
-    expect(currentUrl).to.include('accounts.google');
+    expect(currentUrl).to.include('accounts.google.com');
   });
 
   it('should navigate to github login when on button click', async () => {
     await githubButton.click();
     const currentUrl = await browser.getUrl();
-    console.log('github redirect: ', currentUrl);
-    console.log('github redirect: ', currentUrl);
-    console.log('github redirect: ', currentUrl);
-    console.log('github redirect: ', currentUrl);
-    console.log('github redirect: ', currentUrl);
-    console.log('github redirect: ', currentUrl);
-
-    expect(currentUrl).to.include('github');
+    expect(currentUrl).to.include('github.com');
   });
 });
