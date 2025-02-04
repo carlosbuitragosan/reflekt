@@ -50,7 +50,7 @@ export const config = {
   capabilities: [
     {
       browserName: 'chrome',
-      'goog: chromeOptioins': {
+      'goog:chromeOptions': {
         args: [
           '--headless',
           '--disable-gpu',
@@ -60,6 +60,9 @@ export const config = {
     },
     {
       browserName: 'firefox',
+      'moz:firefoxOptions': {
+        args: ['-headless'],
+      },
     },
   ],
 
