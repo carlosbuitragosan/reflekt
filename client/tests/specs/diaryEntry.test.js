@@ -26,7 +26,6 @@ describe('diary entry page', () => {
     const logoutButton = await $('button=Log out');
     // logoutButton.waitForExist();
     await logoutButton.click();
-
     await browser.waitUntil(
       async () => (await browser.getUrl()).includes('/login'),
       {
