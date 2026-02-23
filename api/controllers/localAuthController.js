@@ -18,7 +18,7 @@ export const loginHandler = (req, res, next) => {
 
       return res.status(200).json({
         success: true,
-        msg: 'Login successful',
+        msg: 'Login successful.',
         user: { email: user.email },
       });
     });

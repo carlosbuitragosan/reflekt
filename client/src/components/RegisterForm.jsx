@@ -40,7 +40,7 @@ export const RegisterForm = () => {
 
     if (!passwordRegex.test(password)) {
       setErrorMessage(
-        'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)',
+        'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.'
       );
       return;
     }
@@ -60,7 +60,7 @@ export const RegisterForm = () => {
         setErrorMessage(
           // display the error message from the server. 'data' containes the response from the server
           err.response.data.msg ||
-            'An error occurred during registration.',
+            'An error occurred during registration.'
         );
       } else {
         setErrorMessage(err.message);
